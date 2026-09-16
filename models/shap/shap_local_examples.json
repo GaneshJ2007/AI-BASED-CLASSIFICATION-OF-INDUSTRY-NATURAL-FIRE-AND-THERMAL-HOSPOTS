@@ -1,0 +1,143 @@
+{
+  "Forest/Natural Fire": {
+    "sample_coords": {
+      "lat": 15.333035994764405,
+      "lon": 78.76996782294837
+    },
+    "explanation": {
+      "predicted_class": 0,
+      "predicted_class_name": "Forest/Natural Fire",
+      "top_drivers": [
+        {
+          "feature": "built_industrial_interaction",
+          "feature_value": 0.0,
+          "shap_impact": 0.1885,
+          "direction": "Supports Classification",
+          "description": "built_industrial_interaction = 0.000 with SHAP contribution of +0.188."
+        },
+        {
+          "feature": "industrial_proximity_score",
+          "feature_value": 0.0005,
+          "shap_impact": 0.109,
+          "direction": "Supports Classification",
+          "description": "industrial_proximity_score = 0.001 with SHAP contribution of +0.109."
+        },
+        {
+          "feature": "dist_to_industrial_km",
+          "feature_value": 76.88,
+          "shap_impact": 0.0248,
+          "direction": "Supports Classification",
+          "description": "Located 76.9km away from industrial infrastructure (remote natural zone)."
+        },
+        {
+          "feature": "DW_built_norm",
+          "feature_value": 0.0337,
+          "shap_impact": 0.0044,
+          "direction": "Supports Classification",
+          "description": "Built-up urban/industrial infrastructure density is 3.4%."
+        },
+        {
+          "feature": "recurrence_count_1km",
+          "feature_value": 1.0,
+          "shap_impact": 0.0026,
+          "direction": "Supports Classification",
+          "description": "recurrence_count_1km = 1.000 with SHAP contribution of +0.003."
+        }
+      ]
+    }
+  },
+  "Industrial Fire": {
+    "sample_coords": {
+      "lat": 13.465953748639963,
+      "lon": 80.161247570332
+    },
+    "explanation": {
+      "predicted_class": 1,
+      "predicted_class_name": "Industrial Fire",
+      "top_drivers": [
+        {
+          "feature": "DW_built_norm",
+          "feature_value": 0.3269,
+          "shap_impact": 0.14,
+          "direction": "Supports Classification",
+          "description": "Built-up urban/industrial infrastructure density is 32.7%."
+        },
+        {
+          "feature": "dist_to_industrial_km",
+          "feature_value": 15.04,
+          "shap_impact": 0.0655,
+          "direction": "Supports Classification",
+          "description": "Located 15.0km away from industrial infrastructure (remote natural zone)."
+        },
+        {
+          "feature": "LST_C",
+          "feature_value": 30.9922,
+          "shap_impact": 0.0525,
+          "direction": "Supports Classification",
+          "description": "Land Surface Temperature is 31.0\u00b0C (elevated thermal anomaly)."
+        },
+        {
+          "feature": "industrial_proximity_score",
+          "feature_value": 0.2222,
+          "shap_impact": 0.0432,
+          "direction": "Supports Classification",
+          "description": "industrial_proximity_score = 0.222 with SHAP contribution of +0.043."
+        },
+        {
+          "feature": "recurrence_count_1km",
+          "feature_value": 1.0,
+          "shap_impact": 0.019,
+          "direction": "Supports Classification",
+          "description": "recurrence_count_1km = 1.000 with SHAP contribution of +0.019."
+        }
+      ]
+    }
+  },
+  "Persistent Thermal Source": {
+    "sample_coords": {
+      "lat": 11.120902829004429,
+      "lon": 79.07486883896243
+    },
+    "explanation": {
+      "predicted_class": 2,
+      "predicted_class_name": "Persistent Thermal Source",
+      "top_drivers": [
+        {
+          "feature": "industrial_proximity_score",
+          "feature_value": 0.7977,
+          "shap_impact": 0.2288,
+          "direction": "Supports Classification",
+          "description": "industrial_proximity_score = 0.798 with SHAP contribution of +0.229."
+        },
+        {
+          "feature": "industrial_density_15km",
+          "feature_value": 1.0,
+          "shap_impact": 0.0615,
+          "direction": "Supports Classification",
+          "description": "industrial_density_15km = 1.000 with SHAP contribution of +0.062."
+        },
+        {
+          "feature": "dist_to_industrial_km",
+          "feature_value": 2.26,
+          "shap_impact": 0.0296,
+          "direction": "Supports Classification",
+          "description": "Located 2.3km from nearest industrial facility (critical industrial zone)."
+        },
+        {
+          "feature": "LST_C",
+          "feature_value": 34.065,
+          "shap_impact": 0.0237,
+          "direction": "Supports Classification",
+          "description": "Land Surface Temperature is 34.1\u00b0C (elevated thermal anomaly)."
+        },
+        {
+          "feature": "recurrence_count_1km",
+          "feature_value": 1.0,
+          "shap_impact": -0.0117,
+          "direction": "Counter-Evidence",
+          "description": "recurrence_count_1km = 1.000 with SHAP contribution of -0.012."
+        }
+      ]
+    }
+  }
+}

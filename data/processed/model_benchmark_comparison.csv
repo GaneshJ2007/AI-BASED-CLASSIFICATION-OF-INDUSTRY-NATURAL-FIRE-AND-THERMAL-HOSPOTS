@@ -1,0 +1,4 @@
+Model,Accuracy (%),Macro-F1,Mean PR-AUC,Forest Fire F1,Industrial Fire F1,Industrial Fire Rec,Persistent Source F1,Persistent Source Rec
+XGBoost,99.16,0.9542,0.9862,0.9964,0.9375,0.8824,0.9286,0.9286
+FT-Transformer,99.66,0.9685,0.9985,1.0,0.9412,0.9412,0.9643,0.9643
+Hybrid FT-Transformer + XGBoost,99.83,0.9841,0.9973,1.0,0.9697,0.9412,0.9825,1.0

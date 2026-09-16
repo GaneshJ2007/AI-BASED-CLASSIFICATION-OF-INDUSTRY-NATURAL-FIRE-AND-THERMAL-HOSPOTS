@@ -1,0 +1,536 @@
+{
+  "Forest/Natural Fire": [
+    {
+      "feature": "built_industrial_interaction",
+      "mean_abs_shap": 0.18424
+    },
+    {
+      "feature": "industrial_proximity_score",
+      "mean_abs_shap": 0.09562
+    },
+    {
+      "feature": "dist_to_industrial_km",
+      "mean_abs_shap": 0.02177
+    },
+    {
+      "feature": "DW_built_norm",
+      "mean_abs_shap": 0.00452
+    },
+    {
+      "feature": "S2_B8_refl",
+      "mean_abs_shap": 0.00437
+    },
+    {
+      "feature": "recurrence_count_1km",
+      "mean_abs_shap": 0.00306
+    },
+    {
+      "feature": "NO2",
+      "mean_abs_shap": 0.00116
+    },
+    {
+      "feature": "S1_VV",
+      "mean_abs_shap": 0.00073
+    },
+    {
+      "feature": "DW_crops_norm",
+      "mean_abs_shap": 0.00072
+    },
+    {
+      "feature": "CO",
+      "mean_abs_shap": 0.00029
+    },
+    {
+      "feature": "NBR",
+      "mean_abs_shap": 0.00029
+    },
+    {
+      "feature": "S1_VH",
+      "mean_abs_shap": 0.00025
+    },
+    {
+      "feature": "DW_bare_norm",
+      "mean_abs_shap": 0.00024
+    },
+    {
+      "feature": "S2_B11_refl",
+      "mean_abs_shap": 0.00019
+    },
+    {
+      "feature": "is_recurrent_hotspot",
+      "mean_abs_shap": 0.00015
+    },
+    {
+      "feature": "S1_VV_VH",
+      "mean_abs_shap": 0.00013
+    },
+    {
+      "feature": "day_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "day_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "thermal_vegetation_ratio",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "LST_C",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "persistence_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "active_months_count",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_5km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "is_industrial_zone",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_15km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_30km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "atmospheric_SO2_NO2_ratio",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_gas_emission_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_trees_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_grass_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_shrub_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_dominant_prob",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_flooded_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_water_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDVI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDMI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "fuel_dryness_indicator",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "vegetation_stress_index",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "SO2",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B12_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B4_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "radar_biomass_proxy",
+      "mean_abs_shap": 0.0
+    }
+  ],
+  "Industrial Fire": [
+    {
+      "feature": "industrial_proximity_score",
+      "mean_abs_shap": 0.1184
+    },
+    {
+      "feature": "DW_built_norm",
+      "mean_abs_shap": 0.10259
+    },
+    {
+      "feature": "dist_to_industrial_km",
+      "mean_abs_shap": 0.02891
+    },
+    {
+      "feature": "recurrence_count_1km",
+      "mean_abs_shap": 0.01199
+    },
+    {
+      "feature": "LST_C",
+      "mean_abs_shap": 0.01123
+    },
+    {
+      "feature": "industrial_density_15km",
+      "mean_abs_shap": 0.00313
+    },
+    {
+      "feature": "vegetation_stress_index",
+      "mean_abs_shap": 0.0025
+    },
+    {
+      "feature": "DW_bare_norm",
+      "mean_abs_shap": 0.00076
+    },
+    {
+      "feature": "thermal_vegetation_ratio",
+      "mean_abs_shap": 0.00075
+    },
+    {
+      "feature": "radar_biomass_proxy",
+      "mean_abs_shap": 0.00064
+    },
+    {
+      "feature": "S2_B4_refl",
+      "mean_abs_shap": 0.00054
+    },
+    {
+      "feature": "S2_B8_refl",
+      "mean_abs_shap": 0.00024
+    },
+    {
+      "feature": "built_industrial_interaction",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "is_recurrent_hotspot",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "persistence_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "active_months_count",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "day_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "day_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_water_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_flooded_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_shrub_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_grass_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_5km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_dominant_prob",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_30km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "is_industrial_zone",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "atmospheric_SO2_NO2_ratio",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_gas_emission_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_trees_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_crops_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "fuel_dryness_indicator",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "CO",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "SO2",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NO2",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDVI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NBR",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDMI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B11_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B12_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S1_VV_VH",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S1_VV",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S1_VH",
+      "mean_abs_shap": 0.0
+    }
+  ],
+  "Persistent Thermal Source": [
+    {
+      "feature": "industrial_proximity_score",
+      "mean_abs_shap": 0.09159
+    },
+    {
+      "feature": "built_industrial_interaction",
+      "mean_abs_shap": 0.0331
+    },
+    {
+      "feature": "dist_to_industrial_km",
+      "mean_abs_shap": 0.0263
+    },
+    {
+      "feature": "recurrence_count_1km",
+      "mean_abs_shap": 0.02265
+    },
+    {
+      "feature": "industrial_density_15km",
+      "mean_abs_shap": 0.01863
+    },
+    {
+      "feature": "LST_C",
+      "mean_abs_shap": 0.01456
+    },
+    {
+      "feature": "is_recurrent_hotspot",
+      "mean_abs_shap": 0.00647
+    },
+    {
+      "feature": "S2_B11_refl",
+      "mean_abs_shap": 0.00292
+    },
+    {
+      "feature": "DW_trees_norm",
+      "mean_abs_shap": 0.0023
+    },
+    {
+      "feature": "S1_VH",
+      "mean_abs_shap": 0.0015
+    },
+    {
+      "feature": "thermal_vegetation_ratio",
+      "mean_abs_shap": 0.00118
+    },
+    {
+      "feature": "S2_B4_refl",
+      "mean_abs_shap": 0.0011
+    },
+    {
+      "feature": "atmospheric_SO2_NO2_ratio",
+      "mean_abs_shap": 0.00086
+    },
+    {
+      "feature": "DW_water_norm",
+      "mean_abs_shap": 0.00084
+    },
+    {
+      "feature": "S1_VV_VH",
+      "mean_abs_shap": 0.0005
+    },
+    {
+      "feature": "vegetation_stress_index",
+      "mean_abs_shap": 0.00043
+    },
+    {
+      "feature": "day_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "day_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_cos",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "month_sin",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "persistence_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "active_months_count",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_grass_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_dominant_prob",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_flooded_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_30km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_density_5km",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "is_industrial_zone",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "industrial_gas_emission_score",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_built_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_bare_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_crops_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "DW_shrub_norm",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "CO",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "SO2",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NO2",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDVI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NBR",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "NDMI",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "fuel_dryness_indicator",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B8_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S2_B12_refl",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "radar_biomass_proxy",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "S1_VV",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}

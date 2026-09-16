@@ -1,0 +1,25 @@
+{
+  "block_size_deg": 0.5,
+  "total_samples": 4164,
+  "train_samples": 2975,
+  "val_samples": 592,
+  "test_samples": 597,
+  "train_blocks": 166,
+  "val_blocks": 34,
+  "test_blocks": 34,
+  "train_class_dist": {
+    "0": 2770,
+    "2": 122,
+    "1": 83
+  },
+  "val_class_dist": {
+    "0": 552,
+    "2": 25,
+    "1": 15
+  },
+  "test_class_dist": {
+    "0": 552,
+    "2": 28,
+    "1": 17
+  }
+}
