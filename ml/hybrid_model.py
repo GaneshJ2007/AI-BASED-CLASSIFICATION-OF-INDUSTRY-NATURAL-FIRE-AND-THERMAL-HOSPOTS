@@ -161,7 +161,7 @@ def run_hybrid_training():
         d_ffn=128,
         dropout=0.15
     ).to(device)
-    ftt_model.load_state_dict(torch.load(os.path.join(FTT_DIR, "ft_transformer_best.pt"), map_location=device))
+    ftt_model.load_state_dict(torch.load(os.path.join(FTT_DIR, "ft_transformer_best.pt"), map_location=device, weights_only=True))
     ftt_model.eval()
     
     xgb_model = joblib.load(os.path.join(XGB_DIR, "xgb_model.joblib"))

@@ -16,7 +16,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-INPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_2021_features.csv"
+INPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_features.csv"
 OUTPUT_HOTSPOTS_PATH = r"d:\IndustryFire\data\final\South_India_Fire_3Class_Labeled.csv"
 OUTPUT_FULL_PATH = r"d:\IndustryFire\data\final\South_India_Fire_Full_Dataset.csv"
 

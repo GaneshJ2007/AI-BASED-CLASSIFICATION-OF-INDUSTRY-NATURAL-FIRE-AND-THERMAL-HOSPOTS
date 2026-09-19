@@ -45,7 +45,7 @@ class TemporalRecurrenceEngine:
         coords_deg = df[[lat_col, lon_col]].values
         coords_rad = np.radians(coords_deg)
         
-        db = DBSCAN(eps=self.eps_rad, min_samples=1, metric="haversine")
+        db = DBSCAN(eps=self.eps_rad, min_samples=1, metric="haversine", algorithm="ball_tree")
         cluster_labels = db.fit_predict(coords_rad)
         df["spatial_cluster_id"] = cluster_labels
         

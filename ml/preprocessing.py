@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 
-RAW_DATA_PATH = r"d:\IndustryFire\data\raw\South_India_Fire_2021.csv"
-OUTPUT_CLEANED_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_2021_cleaned.csv"
+RAW_DATA_PATH = r"d:\IndustryFire\data\raw\South_India_Fire_2021_2025.csv"
+OUTPUT_CLEANED_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_cleaned.csv"
 
 def impute_spatial_lst(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -34,8 +34,8 @@ def impute_spatial_lst(df: pd.DataFrame) -> pd.DataFrame:
         coords_valid = valid_df[["latitude", "longitude"]].values
         coords_invalid = invalid_df[["latitude", "longitude"]].values
         
-        # Fit 5-NN on valid coordinates
-        knn = NearestNeighbors(n_neighbors=5, metric="haversine")
+        # Fit 5-NN on valid coordinates with ball_tree for fast query
+        knn = NearestNeighbors(n_neighbors=5, metric="haversine", algorithm="ball_tree")
         # Convert degrees to radians for haversine
         coords_valid_rad = np.radians(coords_valid)
         coords_invalid_rad = np.radians(coords_invalid)

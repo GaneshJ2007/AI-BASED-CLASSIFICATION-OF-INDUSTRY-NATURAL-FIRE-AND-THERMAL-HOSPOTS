@@ -205,7 +205,7 @@ def train_ft_transformer():
             print(f"Epoch {epoch:02d}/{epochs} | Train Loss: {train_loss:.4f} | Val Macro-F1: {val_macro_f1:.4f} (Best: {best_macro_f1:.4f})")
             
     # Load best model for evaluation
-    model.load_state_dict(torch.load(best_model_path))
+    model.load_state_dict(torch.load(best_model_path, weights_only=True))
     model.eval()
     
     # Test evaluation

@@ -14,8 +14,8 @@ sys.path.append(r"d:\IndustryFire")
 from geospatial.industrial_features import IndustrialSpatialEngine
 from geospatial.temporal_features import TemporalRecurrenceEngine
 
-INPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_2021_cleaned.csv"
-OUTPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_2021_features.csv"
+INPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_cleaned.csv"
+OUTPUT_PATH = r"d:\IndustryFire\data\processed\South_India_Fire_features.csv"
 
 def engineer_interaction_features(df: pd.DataFrame) -> pd.DataFrame:
     """

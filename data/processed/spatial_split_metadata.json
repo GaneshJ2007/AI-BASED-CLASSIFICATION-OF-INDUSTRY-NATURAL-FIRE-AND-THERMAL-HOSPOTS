@@ -1,25 +1,25 @@
 {
   "block_size_deg": 0.5,
-  "total_samples": 4164,
-  "train_samples": 2975,
-  "val_samples": 592,
-  "test_samples": 597,
-  "train_blocks": 166,
-  "val_blocks": 34,
-  "test_blocks": 34,
+  "total_samples": 17377,
+  "train_samples": 12415,
+  "val_samples": 2480,
+  "test_samples": 2482,
+  "train_blocks": 184,
+  "val_blocks": 39,
+  "test_blocks": 37,
   "train_class_dist": {
-    "0": 2770,
-    "2": 122,
-    "1": 83
+    "0": 11285,
+    "2": 726,
+    "1": 404
   },
   "val_class_dist": {
-    "0": 552,
-    "2": 25,
-    "1": 15
+    "0": 2254,
+    "2": 143,
+    "1": 83
   },
   "test_class_dist": {
-    "0": 552,
-    "2": 28,
-    "1": 17
+    "0": 2255,
+    "2": 146,
+    "1": 81
   }
 }
