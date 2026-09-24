@@ -1,27 +1,56 @@
-import React from 'react';
-import { Flame, Satellite, Activity, RefreshCw, Layers, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {
+  Flame,
+  Satellite,
+  Activity,
+  RefreshCw,
+  Layers,
+  ShieldAlert,
+  Sparkles,
+  Play
+} from 'lucide-react';
+import { BackendBadge } from './CommonStates';
+import { checkBackendHealth } from '../services/api';
 
-export default function Header({ 
-  activeTab, 
-  setActiveTab, 
-  onRunAnalysis, 
-  isAnalyzing, 
-  isDemoRun, 
-  onResetDemo 
+export default function Header({
+  activeTab,
+  setActiveTab,
+  onRunAnalysis,
+  isAnalyzing,
+  isDemoRun,
+  onResetDemo,
+  onOpenDemoScenarios
 }) {
+  const [isBackendOnline, setIsBackendOnline] = useState(false);
+
+  const verifyHealth = async () => {
+    const health = await checkBackendHealth();
+    setIsBackendOnline(health.online);
+  };
+
+  useEffect(() => {
+    verifyHealth();
+    const interval = setInterval(verifyHealth, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
   const navTabs = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'hotspots', label: 'Hotspots' },
-    { id: 'risk', label: 'Risk Analysis' },
-    { id: 'history', label: 'History' },
+    { id: 'dashboard', label: 'Command Center' },
+    { id: 'hotspots', label: 'GIS & Registry' },
+    { id: 'alerts', label: 'Alerts Center' },
+    { id: 'reduction', label: 'False-Alarm Funnel' },
+    { id: 'history', label: 'Persistence Ledger' },
+    { id: 'risk', label: 'Risk Matrix' },
+    { id: 'ai-models', label: 'AI Benchmarks' },
+    { id: 'data-sources', label: 'Multi-Sensor Feeds' }
   ];
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-3">
           {/* Brand Logo & Title */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 shrink-0">
             <div className="w-10 h-10 rounded-lg bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
               <Flame className="w-6 h-6 animate-pulse" />
             </div>
@@ -34,23 +63,23 @@ export default function Header({
                   SIH 2026
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium hidden sm:block">
-                AI-Powered Thermal Anomaly Intelligence
+              <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
+                NTRO Problem Statement 26162
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+          <nav className="hidden xl:flex items-center space-x-1 bg-slate-100 p-1 rounded-lg border border-slate-200 overflow-x-auto">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-150 ${
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-white text-sky-700 shadow-sm border border-slate-200/80'
+                      ? 'bg-white text-sky-700 shadow-xs border border-slate-200/80 font-bold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                   }`}
                 >
@@ -61,22 +90,26 @@ export default function Header({
           </nav>
 
           {/* Action Area */}
-          <div className="flex items-center space-x-3">
-            {/* Live Feed Status indicator */}
-            <div className="hidden lg:flex items-center space-x-2 px-2.5 py-1 bg-slate-50 rounded-full border border-slate-200 text-xs text-slate-600">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="font-medium text-slate-700">FIRMS / Sentinel-2 Feed</span>
-            </div>
+          <div className="flex items-center space-x-2.5 shrink-0">
+            {/* Backend Connectivity Status Badge */}
+            <BackendBadge isOnline={isBackendOnline} onCheck={verifyHealth} />
 
-            {/* Reset Demo Button (if analysis already executed) */}
+            {/* SIH Judge Demo Walkthrough Trigger */}
+            <button
+              onClick={onOpenDemoScenarios}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-lg border border-amber-300 shadow-2xs transition-all cursor-pointer"
+              title="Launch Step-by-Step SIH 2026 Evaluation Demonstration"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+              <span className="hidden sm:inline">Judge Walkthrough</span>
+            </button>
+
+            {/* Reset Demo State Button */}
             {isDemoRun && (
               <button
                 onClick={onResetDemo}
                 title="Reset simulation state"
-                className="inline-flex items-center space-x-1.5 px-3 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors border border-slate-200"
+                className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors border border-slate-200 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Reset</span>
@@ -87,21 +120,21 @@ export default function Header({
             <button
               onClick={onRunAnalysis}
               disabled={isAnalyzing}
-              className={`inline-flex items-center space-x-2 px-4 py-2 text-xs font-bold text-white rounded-lg shadow-sm transition-all duration-150 ${
+              className={`inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold text-white rounded-lg shadow-sm transition-all cursor-pointer ${
                 isAnalyzing
                   ? 'bg-sky-400 cursor-not-allowed'
-                  : 'bg-sky-600 hover:bg-sky-700 active:scale-95 shadow-sky-600/25 hover:shadow-md'
+                  : 'bg-sky-600 hover:bg-sky-700 active:scale-95 shadow-sky-600/25'
               }`}
             >
               {isAnalyzing ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Scanning Feeds...</span>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Scanning...</span>
                 </>
               ) : (
                 <>
-                  <Activity className="w-4 h-4" />
-                  <span>RUN THERMAL ANALYSIS</span>
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>Run Analysis</span>
                 </>
               )}
             </button>

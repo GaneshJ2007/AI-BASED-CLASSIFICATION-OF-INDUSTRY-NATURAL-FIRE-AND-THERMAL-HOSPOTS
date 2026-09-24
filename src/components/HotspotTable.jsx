@@ -6,7 +6,8 @@ export default function HotspotTable({
   selectedHotspot,
   onSelectHotspot,
   selectedFilter,
-  onFilterChange
+  onFilterChange,
+  onInspectHotspot
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -226,14 +227,19 @@ export default function HotspotTable({
                     {/* Action */}
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           onSelectHotspot(item);
+                          if (onInspectHotspot) {
+                            onInspectHotspot(item);
+                          }
                         }}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-600 hover:text-white text-slate-600 text-[11px] font-semibold transition-colors"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-600 hover:text-white text-slate-600 text-[11px] font-semibold transition-colors cursor-pointer"
+                        title="Inspect Full Event Dossier"
                       >
                         <Eye className="w-3 h-3" />
-                        <span>View</span>
+                        <span>Inspect</span>
                       </button>
                     </td>
                   </tr>

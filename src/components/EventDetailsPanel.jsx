@@ -15,10 +15,11 @@ import {
   ExternalLink,
   Download,
   Bell,
-  X
+  X,
+  Eye
 } from 'lucide-react';
 
-export default function EventDetailsPanel({ hotspot, onClose }) {
+export default function EventDetailsPanel({ hotspot, onClose, onInspectHotspot }) {
   const [alertSent, setAlertSent] = useState(false);
 
   if (!hotspot) {
@@ -242,6 +243,15 @@ export default function EventDetailsPanel({ hotspot, onClose }) {
 
       {/* Action Footer */}
       <div className="pt-3 border-t border-slate-100 space-y-2">
+        {/* Full Event Inspection Trigger */}
+        <button
+          onClick={() => onInspectHotspot && onInspectHotspot(hotspot)}
+          className="w-full py-2 px-3 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-lg shadow-xs flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
+        >
+          <Eye className="w-3.5 h-3.5 text-sky-600" />
+          <span>Inspect Full Event Dossier</span>
+        </button>
+
         {alertSent && (
           <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold flex items-center space-x-1.5 animate-fadeIn">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
