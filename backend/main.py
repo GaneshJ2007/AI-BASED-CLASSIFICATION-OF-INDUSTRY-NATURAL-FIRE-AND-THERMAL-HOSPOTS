@@ -81,6 +81,7 @@ def list_thermal_events(
     risk_tier: Optional[str] = Query(None, description="Low, Medium, High, Critical, or All"),
     min_lst: Optional[float] = Query(None, description="Minimum Land Surface Temp in Celsius"),
     search: Optional[str] = Query(None, description="Search by ID, location, or facility"),
+    is_alert: Optional[bool] = Query(None, description="Filter for critical and high risk active alerts"),
     limit: int = Query(500, ge=1, le=5000),
     offset: int = Query(0, ge=0)
 ):
@@ -89,6 +90,7 @@ def list_thermal_events(
         risk_tier=risk_tier,
         min_lst=min_lst,
         search=search,
+        is_alert=is_alert,
         limit=limit,
         offset=offset
     )
@@ -190,15 +192,6 @@ def get_data_sources():
         "data_sources": sources
     }
 
-# 3-Scenario Guided SIH Demonstration Walkthrough
-@app.get("/api/demo/scenarios")
-def get_demo_scenarios():
-    scenarios = service.get_demo_scenarios()
-    return {
-        "total_scenarios": len(scenarios),
-        "scenarios": scenarios
-    }
-
 # Facilities Cadastre
 @app.get("/api/facilities")
 def get_industrial_facilities():
@@ -227,3 +220,4 @@ def predict_hotspot(payload: TelemetryPayload):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
+ 

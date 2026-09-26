@@ -7,7 +7,8 @@ export default function HotspotTable({
   onSelectHotspot,
   selectedFilter,
   onFilterChange,
-  onInspectHotspot
+  onInspectHotspot,
+  onNavigateToAnalysis
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +16,7 @@ export default function HotspotTable({
 
   const filterTabs = [
     { id: 'All', label: 'All' },
+    { id: 'Active Alerts', label: 'Active Alerts' },
     { id: 'Industrial Fire', label: 'Industrial Fire' },
     { id: 'Natural Fire', label: 'Natural Fire' },
     { id: 'Persistent Thermal', label: 'Persistent Thermal' },
@@ -26,7 +28,9 @@ export default function HotspotTable({
     // Type/Risk filter
     let matchesFilter = true;
     if (selectedFilter === 'High Risk') {
-      matchesFilter = item.riskScore >= 80;
+      matchesFilter = item.riskTier === 'Critical' || item.riskScore >= 80;
+    } else if (selectedFilter === 'Active Alerts') {
+      matchesFilter = (item.riskTier === 'Critical' || item.riskTier === 'High' || item.riskScore >= 60) && item.type !== 'Persistent Thermal';
     } else if (selectedFilter !== 'All') {
       matchesFilter = item.type === selectedFilter;
     }
@@ -226,21 +230,37 @@ export default function HotspotTable({
 
                     {/* Action */}
                     <td className="py-3 px-4 text-right whitespace-nowrap">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectHotspot(item);
-                          if (onInspectHotspot) {
-                            onInspectHotspot(item);
-                          }
-                        }}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-sky-600 hover:text-white text-slate-600 text-[11px] font-semibold transition-colors cursor-pointer"
-                        title="Inspect Full Event Dossier"
-                      >
-                        <Eye className="w-3 h-3" />
-                        <span>Inspect</span>
-                      </button>
+                      <div className="flex items-center justify-end space-x-1.5">
+                        {onNavigateToAnalysis && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectHotspot(item);
+                              onNavigateToAnalysis(item);
+                            }}
+                            className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold transition-colors cursor-pointer"
+                            title="Detailed Hotspot Analysis"
+                          >
+                            <Eye className="w-3 h-3" />
+                            <span>Analyze</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectHotspot(item);
+                            if (onInspectHotspot) {
+                              onInspectHotspot(item);
+                            }
+                          }}
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
+                          title="Quick Modal Dossier"
+                        >
+                          <span>Dossier</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

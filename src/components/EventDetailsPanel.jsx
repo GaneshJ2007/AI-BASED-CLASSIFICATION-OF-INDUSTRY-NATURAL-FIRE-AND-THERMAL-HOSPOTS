@@ -19,7 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 
-export default function EventDetailsPanel({ hotspot, onClose, onInspectHotspot }) {
+export default function EventDetailsPanel({ hotspot, onClose, onInspectHotspot, onNavigateToAnalysis }) {
   const [alertSent, setAlertSent] = useState(false);
 
   if (!hotspot) {
@@ -243,13 +243,23 @@ export default function EventDetailsPanel({ hotspot, onClose, onInspectHotspot }
 
       {/* Action Footer */}
       <div className="pt-3 border-t border-slate-100 space-y-2">
-        {/* Full Event Inspection Trigger */}
+        {onNavigateToAnalysis && (
+          <button
+            onClick={() => onNavigateToAnalysis(hotspot)}
+            className="w-full py-2 px-3 text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 rounded-lg shadow-sm flex items-center justify-center space-x-1.5 transition-all cursor-pointer"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>Open in Hotspot Analysis Screen →</span>
+          </button>
+        )}
+
+        {/* Quick Inspection Modal Trigger */}
         <button
           onClick={() => onInspectHotspot && onInspectHotspot(hotspot)}
-          className="w-full py-2 px-3 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-lg shadow-xs flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
+          className="w-full py-1.5 px-3 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg shadow-2xs flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
         >
-          <Eye className="w-3.5 h-3.5 text-sky-600" />
-          <span>Inspect Full Event Dossier</span>
+          <Eye className="w-3.5 h-3.5 text-slate-500" />
+          <span>Quick Modal Dossier</span>
         </button>
 
         {alertSent && (

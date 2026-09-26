@@ -6,7 +6,6 @@ import {
   RefreshCw,
   Layers,
   ShieldAlert,
-  Sparkles,
   Play
 } from 'lucide-react';
 import { BackendBadge } from './CommonStates';
@@ -18,8 +17,7 @@ export default function Header({
   onRunAnalysis,
   isAnalyzing,
   isDemoRun,
-  onResetDemo,
-  onOpenDemoScenarios
+  onResetDemo
 }) {
   const [isBackendOnline, setIsBackendOnline] = useState(false);
 
@@ -35,14 +33,11 @@ export default function Header({
   }, []);
 
   const navTabs = [
-    { id: 'dashboard', label: 'Command Center' },
-    { id: 'hotspots', label: 'GIS & Registry' },
-    { id: 'alerts', label: 'Alerts Center' },
-    { id: 'reduction', label: 'False-Alarm Funnel' },
-    { id: 'history', label: 'Persistence Ledger' },
-    { id: 'risk', label: 'Risk Matrix' },
-    { id: 'ai-models', label: 'AI Benchmarks' },
-    { id: 'data-sources', label: 'Multi-Sensor Feeds' }
+    { id: 'dashboard', label: '1. Dashboard' },
+    { id: 'gis-map', label: '2. Live GIS Map' },
+    { id: 'hotspot-analysis', label: '3. Hotspot Analysis' },
+    { id: 'historical-analysis', label: '4. Historical Analysis' },
+    { id: 'alerts', label: '5. Alerts' }
   ];
 
   return (
@@ -93,16 +88,6 @@ export default function Header({
           <div className="flex items-center space-x-2.5 shrink-0">
             {/* Backend Connectivity Status Badge */}
             <BackendBadge isOnline={isBackendOnline} onCheck={verifyHealth} />
-
-            {/* SIH Judge Demo Walkthrough Trigger */}
-            <button
-              onClick={onOpenDemoScenarios}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-lg border border-amber-300 shadow-2xs transition-all cursor-pointer"
-              title="Launch Step-by-Step SIH 2026 Evaluation Demonstration"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-              <span className="hidden sm:inline">Judge Walkthrough</span>
-            </button>
 
             {/* Reset Demo State Button */}
             {isDemoRun && (

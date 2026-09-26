@@ -1,38 +1,19 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
-import SummaryCards from './components/SummaryCards';
-import InteractiveMap from './components/InteractiveMap';
-import EventDetailsPanel from './components/EventDetailsPanel';
-import HotspotTable from './components/HotspotTable';
-import DataSourcesBanner from './components/DataSourcesBanner';
-import AnalyticsSection from './components/AnalyticsSection';
+import DashboardView from './components/DashboardView';
+import LiveGISMapView from './components/LiveGISMapView';
+import HotspotAnalysisView from './components/HotspotAnalysisView';
+import HistoricalAnalysisView from './components/HistoricalAnalysisView';
+import AlertsView from './components/AlertsView';
 import RunAnalysisModal from './components/RunAnalysisModal';
-import RiskAnalysisView from './components/RiskAnalysisView';
-import HistoryView from './components/HistoryView';
-import AIModelBenchmarkingView from './components/AIModelBenchmarkingView';
 import EventInspectionModal from './components/EventInspectionModal';
-import AlertsCenterView from './components/AlertsCenterView';
-import FalseAlarmReductionView from './components/FalseAlarmReductionView';
-import DataSourcesView from './components/DataSourcesView';
-import DemoScenariosModal from './components/DemoScenariosModal';
 import {
-  INITIAL_DATASET,
-  SIMULATED_NEW_HOTSPOTS,
-  INDUSTRIAL_CLUSTERS
+  SIMULATED_NEW_HOTSPOTS
 } from './data/mockHotspots';
 import { REAL_HOTSPOTS } from './data/realHotspotsData';
 import { fetchThermalEvents } from './services/api';
-import {
-  Flame,
-  ShieldAlert,
-  Layers,
-  Activity,
-  CheckCircle2,
-  ArrowRight,
-  RefreshCw,
-  Cpu
-} from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function App() {
   // Hotspot dataset state - initialized with real South India satellite labeled events
@@ -44,10 +25,7 @@ export default function App() {
   // Deep event inspection modal state
   const [inspectedHotspot, setInspectedHotspot] = useState(null);
 
-  // SIH 2026 3-Scenario Guided Demo Modal
-  const [isDemoScenariosModalOpen, setIsDemoScenariosModalOpen] = useState(false);
-
-  // Active navigation tab ('dashboard' | 'hotspots' | 'alerts' | 'reduction' | 'history' | 'risk' | 'ai-models' | 'industrial' | 'data-sources')
+  // Active navigation screen ('dashboard' | 'gis-map' | 'hotspot-analysis' | 'historical-analysis' | 'alerts')
   const [activeTab, setActiveTab] = useState('dashboard');
 
   // Active filter ('All' | 'Industrial Fire' | 'Natural Fire' | 'Persistent Thermal' | 'High Risk')
@@ -81,17 +59,13 @@ export default function App() {
     const industrial = hotspots.filter((h) => h.type === 'Industrial Fire').length;
     const natural = hotspots.filter((h) => h.type === 'Natural Fire').length;
     const persistent = hotspots.filter((h) => h.type === 'Persistent Thermal').length;
-    const highRisk = hotspots.filter((h) => h.riskScore >= 80).length;
+    const highRisk = hotspots.filter((h) => h.riskTier === 'Critical' || (h.riskScore && h.riskScore >= 80)).length;
+    const activeAlerts = hotspots.filter(
+      (h) => (h.riskTier === 'Critical' || h.riskTier === 'High' || (h.riskScore && h.riskScore >= 60)) && h.type !== 'Persistent Thermal'
+    ).length;
 
-    return { total, industrial, natural, persistent, highRisk };
+    return { total, industrial, natural, persistent, highRisk, activeAlerts };
   }, [hotspots]);
-
-  // Filtered hotspots for map view
-  const displayHotspots = useMemo(() => {
-    if (selectedFilter === 'All') return hotspots;
-    if (selectedFilter === 'High Risk') return hotspots.filter((h) => h.riskScore >= 80);
-    return hotspots.filter((h) => h.type === selectedFilter);
-  }, [hotspots, selectedFilter]);
 
   // Trigger Run Thermal Analysis
   const handleRunAnalysis = () => {
@@ -128,13 +102,6 @@ export default function App() {
     setAnalysisToast(null);
   };
 
-  // Apply scenario hotspot to map from DemoScenariosModal
-  const handleApplyScenarioHotspot = (scenarioHotspot) => {
-    setHotspots((prev) => [scenarioHotspot, ...prev.filter((h) => h.id !== scenarioHotspot.id)]);
-    setSelectedHotspot(scenarioHotspot);
-    setActiveTab('dashboard');
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased selection:bg-sky-100 selection:text-sky-900">
       {/* Top Header */}
@@ -145,7 +112,6 @@ export default function App() {
         isAnalyzing={isAnalyzing}
         isDemoRun={isDemoRun}
         onResetDemo={handleResetDemo}
-        onOpenDemoScenarios={() => setIsDemoScenariosModalOpen(true)}
       />
 
       {/* Live Toast Banner if Analysis Finished */}
@@ -174,227 +140,76 @@ export default function App() {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           counts={counts}
-          onOpenDemoScenarios={() => setIsDemoScenariosModalOpen(true)}
         />
 
-        {/* Main Content Area */}
+        {/* Main Content Area: ONLY THE 5 REQUIRED SCREENS */}
         <main className="flex-1 min-w-0 space-y-6">
-          {/* TAB 1: MAIN DASHBOARD */}
+          {/* SCREEN 1: DASHBOARD (Overview + statistics + recent alerts) */}
           {activeTab === 'dashboard' && (
-            <>
-              {/* 1. Summary Cards */}
-              <section>
-                <SummaryCards
-                  counts={counts}
-                  selectedFilter={selectedFilter}
-                  onFilterChange={setSelectedFilter}
-                />
-              </section>
-
-              {/* 2. Interactive GIS Map & Event Details Panel Grid */}
-              <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div className="xl:col-span-2">
-                  <InteractiveMap
-                    hotspots={displayHotspots}
-                    selectedHotspot={selectedHotspot}
-                    onSelectHotspot={setSelectedHotspot}
-                    onInspectHotspot={setInspectedHotspot}
-                    counts={counts}
-                  />
-                </div>
-                <div className="xl:col-span-1">
-                  <EventDetailsPanel
-                    hotspot={selectedHotspot}
-                    onClose={() => setSelectedHotspot(null)}
-                    onInspectHotspot={setInspectedHotspot}
-                  />
-                </div>
-              </section>
-
-              {/* 3. Multi-Source Data Fusion Banner */}
-              <section>
-                <DataSourcesBanner />
-              </section>
-
-              {/* 4. Hotspot Registry Table */}
-              <section>
-                <HotspotTable
-                  hotspots={hotspots}
-                  selectedHotspot={selectedHotspot}
-                  onSelectHotspot={setSelectedHotspot}
-                  onInspectHotspot={setInspectedHotspot}
-                  selectedFilter={selectedFilter}
-                  onFilterChange={setSelectedFilter}
-                />
-              </section>
-
-              {/* 5. Analytics Section */}
-              <section>
-                <AnalyticsSection hotspots={hotspots} counts={counts} />
-              </section>
-            </>
+            <DashboardView
+              hotspots={hotspots}
+              counts={counts}
+              onNavigateToTab={setActiveTab}
+              onSelectHotspot={setSelectedHotspot}
+              onRunAnalysis={handleRunAnalysis}
+              isAnalyzing={isAnalyzing}
+            />
           )}
 
-          {/* TAB 2: HOTSPOTS REGISTRY VIEW */}
-          {activeTab === 'hotspots' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div className="xl:col-span-2">
-                  <InteractiveMap
-                    hotspots={displayHotspots}
-                    selectedHotspot={selectedHotspot}
-                    onSelectHotspot={setSelectedHotspot}
-                    onInspectHotspot={setInspectedHotspot}
-                    counts={counts}
-                  />
-                </div>
-                <div className="xl:col-span-1">
-                  <EventDetailsPanel
-                    hotspot={selectedHotspot}
-                    onClose={() => setSelectedHotspot(null)}
-                    onInspectHotspot={setInspectedHotspot}
-                  />
-                </div>
-              </div>
-
-              <HotspotTable
-                hotspots={hotspots}
-                selectedHotspot={selectedHotspot}
-                onSelectHotspot={setSelectedHotspot}
-                onInspectHotspot={setInspectedHotspot}
-                selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
-              />
-            </div>
+          {/* SCREEN 2: LIVE GIS MAP (MAIN MODULE: Hotspots, Classification, Industrial facilities, Forest areas, Risk layers, Filters) */}
+          {activeTab === 'gis-map' && (
+            <LiveGISMapView
+              hotspots={hotspots}
+              selectedHotspot={selectedHotspot}
+              onSelectHotspot={setSelectedHotspot}
+              counts={counts}
+              onInspectHotspot={setInspectedHotspot}
+              onNavigateToAnalysis={(h) => {
+                setSelectedHotspot(h);
+                setActiveTab('hotspot-analysis');
+              }}
+              selectedFilter={selectedFilter}
+              setSelectedFilter={setSelectedFilter}
+            />
           )}
 
-          {/* TAB 3: ENTERPRISE ALERTS CENTER */}
+          {/* SCREEN 3: HOTSPOT ANALYSIS (Detailed information about one selected thermal event) */}
+          {activeTab === 'hotspot-analysis' && (
+            <HotspotAnalysisView
+              hotspots={hotspots}
+              selectedHotspot={selectedHotspot}
+              onSelectHotspot={setSelectedHotspot}
+              onNavigateToTab={setActiveTab}
+            />
+          )}
+
+          {/* SCREEN 4: HISTORICAL ANALYSIS (Persistence + recurrence + timeline) */}
+          {activeTab === 'historical-analysis' && (
+            <HistoricalAnalysisView
+              hotspots={hotspots}
+              onSelectHotspot={(h) => {
+                setSelectedHotspot(h);
+                setActiveTab('hotspot-analysis');
+              }}
+              onNavigateToTab={setActiveTab}
+            />
+          )}
+
+          {/* SCREEN 5: ALERTS (High-risk industrial/natural thermal events) */}
           {activeTab === 'alerts' && (
-            <AlertsCenterView
-              onSelectHotspot={(item) => {
-                setSelectedHotspot(item);
-                setActiveTab('dashboard');
-              }}
-              onInspectHotspot={setInspectedHotspot}
-            />
-          )}
-
-          {/* TAB 4: FALSE-ALARM REDUCTION FUNNEL */}
-          {activeTab === 'reduction' && (
-            <FalseAlarmReductionView
-              onNavigateToHotspots={() => setActiveTab('hotspots')}
-            />
-          )}
-
-          {/* TAB 5: TEMPORAL PERSISTENCE LEDGER (HISTORY) */}
-          {activeTab === 'history' && (
-            <HistoryView
+            <AlertsView
               hotspots={hotspots}
-              onSelectHotspot={(item) => {
-                setSelectedHotspot(item);
-                setActiveTab('dashboard');
+              onSelectHotspot={(h) => {
+                setSelectedHotspot(h);
+                setActiveTab('hotspot-analysis');
               }}
-              onInspectHotspot={setInspectedHotspot}
+              onNavigateToTab={setActiveTab}
             />
-          )}
-
-          {/* TAB 6: MULTI-FACTOR RISK ANALYSIS */}
-          {activeTab === 'risk' && (
-            <RiskAnalysisView
-              hotspots={hotspots}
-              onSelectHotspot={(item) => {
-                setSelectedHotspot(item);
-                setActiveTab('dashboard');
-              }}
-            />
-          )}
-
-          {/* TAB 7: AI MODELS & SHAP BENCHMARKS */}
-          {activeTab === 'ai-models' && (
-            <AIModelBenchmarkingView />
-          )}
-
-          {/* TAB 8: MULTI-SENSOR DATA SOURCES */}
-          {activeTab === 'data-sources' && (
-            <DataSourcesView />
-          )}
-
-          {/* TAB 9: INDUSTRIAL CADASTRE */}
-          {activeTab === 'industrial' && (
-            <div className="space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-extrabold text-slate-900 font-display mb-1">
-                  South India Industrial Cadastre & Buffer Registry
-                </h2>
-                <p className="text-xs text-slate-500">
-                  OpenStreetMap verified spatial polygons and facilities for hazardous chemical facilities, refineries, power plants, and SEZs.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {INDUSTRIAL_CLUSTERS.map((cluster) => {
-                  const matchingHotspots = hotspots.filter(
-                    (h) =>
-                      h.location.toLowerCase().includes(cluster.city.split(',')[0].toLowerCase()) ||
-                      h.location.toLowerCase().includes(cluster.name.split(' ')[0].toLowerCase())
-                  );
-
-                  return (
-                    <div
-                      key={cluster.id}
-                      className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3 hover:border-sky-300 transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-display font-extrabold text-slate-900 text-sm">
-                          {cluster.name}
-                        </span>
-                        <span
-                          className="text-[10px] font-bold px-2 py-0.5 rounded border"
-                          style={{
-                            color: cluster.color,
-                            borderColor: `${cluster.color}40`,
-                            backgroundColor: `${cluster.color}15`
-                          }}
-                        >
-                          {cluster.hazardLevel}
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-slate-600 font-medium">{cluster.city}</p>
-
-                      <div className="p-2.5 rounded-lg bg-slate-50 text-xs text-slate-600 space-y-1">
-                        <div className="flex justify-between">
-                          <span>Active Thermal Incidents:</span>
-                          <span className="font-bold text-slate-900">
-                            {matchingHotspots.length} Detected
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Safety Buffer:</span>
-                          <span className="font-bold text-sky-700">1.5 km Critical Radius</span>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => {
-                          const match = matchingHotspots[0] || hotspots[0];
-                          setSelectedHotspot(match);
-                          setActiveTab('dashboard');
-                        }}
-                        className="w-full py-1.5 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors text-center cursor-pointer"
-                      >
-                        Inspect Zone on Map →
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           )}
         </main>
       </div>
 
-      {/* Analysis Modal */}
+      {/* Analysis Simulation Modal */}
       <RunAnalysisModal
         isOpen={isAnalysisModalOpen}
         onClose={() => setIsAnalysisModalOpen(false)}
@@ -408,14 +223,7 @@ export default function App() {
         onClose={() => setInspectedHotspot(null)}
       />
 
-      {/* 3-Scenario Guided SIH Demonstration Walkthrough */}
-      <DemoScenariosModal
-        isOpen={isDemoScenariosModalOpen}
-        onClose={() => setIsDemoScenariosModalOpen(false)}
-        onApplyHotspotToMap={handleApplyScenarioHotspot}
-      />
-
-      {/* Clean Footer */}
+      {/* Clean Global Footer */}
       <footer className="bg-white border-t border-slate-200 mt-auto py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
           <div className="flex items-center space-x-2 font-medium">
@@ -425,11 +233,11 @@ export default function App() {
           </div>
 
           <div className="flex items-center space-x-4 text-[11px] text-slate-400">
-            <span>NASA FIRMS • Sentinel-1 SAR • Sentinel-2 • Sentinel-5P • OpenStreetMap Fusion</span>
+            <span>NASA FIRMS • Sentinel-1 SAR • Sentinel-2 MSI • Sentinel-5P TROPOMI • OpenStreetMap Fusion</span>
             <span>•</span>
             <span className="text-emerald-600 font-semibold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              South India Satellite Archive (2021-2025)
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              5 Core Platform Screens
             </span>
           </div>
         </div>

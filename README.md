@@ -95,12 +95,6 @@ OpenStreetMap Cadastre    ──► 53 Hazardous Industrial Assets & 1.5km Buffe
    - 30-day temporal recurrence histograms.
    - Explicit behavioral contrast between acute fire surges and stationary flare stacks.
 
-5. **SIH 2026 Judge Demonstration Mode**:
-   - 3-scenario guided walkthrough:
-     - *Scenario 1: Forest & Wildland Fire* (Seshachalam Biosphere Reserve)
-     - *Scenario 2: Acute Industrial Fire* (Manali Petrochemical Corridor)
-     - *Scenario 3: Persistent Thermal Stack* (Neyveli Lignite Thermal Power Station)
-
 ---
 
 ## 💻 Tech Stack

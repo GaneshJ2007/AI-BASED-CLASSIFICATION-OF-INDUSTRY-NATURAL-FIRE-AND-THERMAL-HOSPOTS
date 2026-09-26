@@ -18,10 +18,13 @@ export const OSM_INDUSTRIAL_FACILITIES = [
 ];
 
 export const QUICK_JUMP_LOCATIONS = [
-  { name: 'Chennai Manali', lat: 13.1672, lng: 80.2641, zoom: 12 },
-  { name: 'Vizag Steel & Port', lat: 17.65, lng: 83.19, zoom: 12 },
-  { name: 'Neyveli Lignite', lat: 11.5975, lng: 79.4892, zoom: 12 },
-  { name: 'Hyderabad Patancheru', lat: 17.5281, lng: 78.2612, zoom: 12 },
-  { name: 'Mangalore Petrochem', lat: 12.9972, lng: 74.8344, zoom: 12 },
-  { name: 'Bellary Toranagallu', lat: 15.1882, lng: 76.6651, zoom: 12 }
+  { name: 'Chennai Manali (Ind)', lat: 13.1672, lng: 80.2641, zoom: 12 },
+  { name: 'Vizag Steel & Port (Ind)', lat: 17.65, lng: 83.19, zoom: 12 },
+  { name: 'Neyveli Lignite (Ind)', lat: 11.5975, lng: 79.4892, zoom: 12 },
+  { name: 'Hyderabad Patancheru (Ind)', lat: 17.5281, lng: 78.2612, zoom: 12 },
+  { name: 'Bandipur & Mudumalai (Forest)', lat: 11.65, lng: 76.55, zoom: 11 },
+  { name: 'Nallamala & Srisailam (Forest)', lat: 15.95, lng: 78.95, zoom: 10 },
+  { name: 'Seshachalam Hills (Forest)', lat: 13.72, lng: 79.35, zoom: 11 },
+  { name: 'Mangalore Petrochem (Ind)', lat: 12.9972, lng: 74.8344, zoom: 12 },
+  { name: 'Bellary Toranagallu (Ind)', lat: 15.1882, lng: 76.6651, zoom: 12 }
 ];

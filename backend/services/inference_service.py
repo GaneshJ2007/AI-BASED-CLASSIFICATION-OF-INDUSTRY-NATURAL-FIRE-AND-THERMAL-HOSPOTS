@@ -31,6 +31,8 @@ CLASS_MAPPING_REV = {
     2: "Persistent Thermal"
 }
 
+CURATED_HOTSPOTS_PATH = r"d:\IndustryFire\data\final\curated_hotspots.json"
+
 class GeospatialInferenceService:
     def __init__(self):
         self.industrial_engine = IndustrialSpatialEngine()
@@ -61,46 +63,53 @@ class GeospatialInferenceService:
         except Exception as e:
             print(f"SHAP explainer deferred: {e}")
             
-        # Load and prepare full hotspots dataset for instant dashboard serving
-        if os.path.exists(HOTSPOTS_DATA_PATH):
+        # 1. Prefer curated, balanced 540-hotspot benchmark dataset for dashboard serving
+        if os.path.exists(CURATED_HOTSPOTS_PATH):
+            try:
+                with open(CURATED_HOTSPOTS_PATH, "r", encoding="utf-8") as f:
+                    curated_data = json.load(f)
+                for h in curated_data:
+                    h["class_code"] = h.get("classCode", 0)
+                    h["class_name"] = h.get("type", "Unknown")
+                    h["risk_tier"] = h.get("riskTier", "Medium")
+                    h["risk_score"] = h.get("riskScore", 50.0)
+                    h["nearest_facility"] = h.get("nearestFacility", "Industrial Hub")
+                    if "lst_c" not in h and "temperature" in h:
+                        try:
+                            h["lst_c"] = float(str(h["temperature"]).replace("°C", "").strip())
+                        except Exception:
+                            h["lst_c"] = 32.0
+                self.hotspots_cache = curated_data
+                print(f"Loaded {len(self.hotspots_cache)} curated high-fidelity hotspots from JSON.")
+            except Exception as e:
+                print(f"Error loading curated JSON: {e}")
+
+        # 2. Fallback to HOTSPOTS_DATA_PATH if JSON not available
+        if not self.hotspots_cache and os.path.exists(HOTSPOTS_DATA_PATH):
             try:
                 df = pd.read_csv(HOTSPOTS_DATA_PATH)
-                
-                # Calibrate risk score: enhance urgency for acute industrial fires
                 df = self.risk_engine.compute_risk(df)
                 
-                # Boost risk for industrial fires near critical facilities
-                if "target_class" in df.columns:
-                    ind_mask = (df["target_class"] == 1)
-                    prox_mask = ind_mask & (df.get("dist_to_industrial_km", 20.0) <= 5.0)
-                    df.loc[prox_mask, "risk_score"] = np.clip(df.loc[prox_mask, "risk_score"] * 1.35 + 15.0, 0.0, 99.0)
-                    
-                    # Recompute tiers
-                    cond = [
-                        (df["risk_score"] < 35.0),
-                        (df["risk_score"] >= 35.0) & (df["risk_score"] < 60.0),
-                        (df["risk_score"] >= 60.0) & (df["risk_score"] < 80.0),
-                        (df["risk_score"] >= 80.0)
-                    ]
-                    df["risk_tier"] = np.select(cond, ["Low", "Medium", "High", "Critical"], default="Medium")
-                    color_map = {"Low": "#10B981", "Medium": "#F59E0B", "High": "#F97316", "Critical": "#EF4444"}
-                    df["risk_color"] = df["risk_tier"].map(color_map)
+                # Curate balanced sample to avoid overwhelming map with background vegetation
+                ind_df = df[df["target_class"] == 1]
+                per_df = df[df["target_class"] == 2]
+                for_df = df[df["target_class"] == 0]
+                if len(for_df) > 250:
+                    for_df = for_df.sample(n=250, random_state=42)
+                df = pd.concat([ind_df, per_df, for_df]).reset_index(drop=True)
 
                 def col_series(col_name, default_val):
                     if col_name in df.columns:
                         return df[col_name].fillna(default_val)
                     return pd.Series(default_val, index=df.index)
 
-                # Format records
                 df["id"] = [f"TT-2021-{i+1:04d}" for i in range(len(df))]
-                df["latitude"] = df["latitude"].round(5)
-                df["longitude"] = df["longitude"].round(5)
-                df["lat"] = df["latitude"]
-                df["lng"] = df["longitude"]
+                df["lat"] = df["latitude"].round(5)
+                df["lng"] = df["longitude"].round(5)
                 df["class_code"] = df["target_class"].astype(int)
                 df["classCode"] = df["class_code"]
-                df["class_name"] = df["class_code"].map(CLASS_NAMES).fillna("Unknown")
                 df["type"] = df["class_code"].map(CLASS_MAPPING_REV).fillna("Natural Fire")
+                df["class_name"] = df["type"]
                 df["confidence"] = col_series("confidence", 88.0).round(1)
                 df["lst_c"] = col_series("LST_C", 30.0).round(1)
                 df["temperature"] = df["lst_c"].apply(lambda x: f"{x}°C")
@@ -125,7 +134,7 @@ class GeospatialInferenceService:
                 df["timestamp"] = df["date"] + " 08:30 UTC"
 
                 export_cols = [
-                    "id", "latitude", "longitude", "lat", "lng", "class_code", "classCode",
+                    "id", "lat", "lng", "class_code", "classCode",
                     "class_name", "type", "confidence", "lst_c", "temperature", "frp",
                     "risk_score", "riskScore", "risk_tier", "riskTier", "risk_color", "riskColor",
                     "dist_to_industrial_km", "distToIndustrial", "nearest_facility", "nearestFacility",
@@ -133,7 +142,7 @@ class GeospatialInferenceService:
                     "recommended_action", "recommendedAction", "location", "satellite", "date", "timestamp"
                 ]
                 self.hotspots_cache = df[export_cols].to_dict(orient="records")
-                print(f"Cached {len(self.hotspots_cache)} labeled hotspots for dashboard.")
+                print(f"Cached {len(self.hotspots_cache)} balanced hotspots for dashboard.")
             except Exception as e:
                 print(f"Error loading hotspots dataset: {e}")
 
@@ -189,14 +198,17 @@ class GeospatialInferenceService:
     def get_facilities(self):
         return SOUTH_INDIA_INDUSTRIAL_FACILITIES
 
-    def get_hotspots(self, class_code=None, risk_tier=None, min_lst=None, search=None, limit=500, offset=0):
+    def get_hotspots(self, class_code=None, risk_tier=None, min_lst=None, search=None, is_alert=None, limit=500, offset=0):
         results = self.hotspots_cache
+        if is_alert:
+            # Active emergency alerts: Critical & High risk Industrial or Wildfire emergencies (exclude whitelisted persistent sources)
+            results = [h for h in results if h.get("riskTier") in ("Critical", "High") and h.get("classCode") != 2]
         if class_code is not None and class_code != -1:
-            results = [h for h in results if h["class_code"] == class_code or h.get("classCode") == class_code]
+            results = [h for h in results if h.get("class_code") == class_code or h.get("classCode") == class_code]
         if risk_tier is not None and risk_tier.lower() != "all":
-            results = [h for h in results if h["risk_tier"].lower() == risk_tier.lower() or h.get("riskTier", "").lower() == risk_tier.lower()]
+            results = [h for h in results if h.get("risk_tier", "").lower() == risk_tier.lower() or h.get("riskTier", "").lower() == risk_tier.lower()]
         if min_lst is not None:
-            results = [h for h in results if h["lst_c"] >= min_lst]
+            results = [h for h in results if float(h.get("lst_c", 0)) >= min_lst]
         if search:
             query = search.lower().strip()
             results = [
@@ -215,24 +227,29 @@ class GeospatialInferenceService:
         if total == 0:
             return {}
             
-        class_counts = {name: 0 for name in CLASS_NAMES.values()}
         tier_counts = {"Low": 0, "Medium": 0, "High": 0, "Critical": 0}
         
         for h in self.hotspots_cache:
-            c_name = h.get("class_name", "Unknown")
-            class_counts[c_name] = class_counts.get(c_name, 0) + 1
-            t_name = h.get("risk_tier", "Medium")
+            t_name = h.get("riskTier") or h.get("risk_tier", "Medium")
             tier_counts[t_name] = tier_counts.get(t_name, 0) + 1
             
+        ind_count = len([h for h in self.hotspots_cache if h.get("type") == "Industrial Fire" or h.get("classCode") == 1])
+        per_count = len([h for h in self.hotspots_cache if h.get("type") == "Persistent Thermal" or h.get("classCode") == 2])
+        nat_count = len([h for h in self.hotspots_cache if h.get("type") == "Natural Fire" or h.get("classCode") == 0])
+
         return {
             "total_hotspots": total,
-            "classes": class_counts,
+            "classes": {
+                "Industrial Fire": ind_count,
+                "Persistent Thermal Source": per_count,
+                "Forest/Natural Fire": nat_count
+            },
             "risk_tiers": tier_counts,
-            "avg_lst": round(float(np.mean([h["lst_c"] for h in self.hotspots_cache])), 1),
-            "critical_count": tier_counts["Critical"],
-            "industrial_fire_count": class_counts.get("Industrial Fire", 0),
-            "persistent_source_count": class_counts.get("Persistent Thermal Source", 0),
-            "forest_fire_count": class_counts.get("Forest/Natural Fire", 0),
+            "avg_lst": round(float(np.mean([float(h.get("lst_c", 32.0)) for h in self.hotspots_cache])), 1),
+            "critical_count": tier_counts.get("Critical", 0),
+            "industrial_fire_count": ind_count,
+            "persistent_source_count": per_count,
+            "forest_fire_count": nat_count,
             "active_alerts_count": len([a for a in self.alerts_registry if a["status"] != "RESOLVED"])
         }
 
@@ -569,3 +586,4 @@ class GeospatialInferenceService:
 
 # Singleton instance
 service = GeospatialInferenceService()
+ 
